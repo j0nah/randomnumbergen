@@ -1,8 +1,10 @@
 from randomnumbers.models import RandomNumber
 from django.http import JsonResponse
+from randomnumbers.tasks import generate_random_number
 
 def random_number_request(request):
     rn = RandomNumber.objects.create()
+    generate_random_number.delay(rn.id)
     return JsonResponse({"id": rn.id})
 
 def random_number_status(request, id):
